@@ -1,0 +1,48 @@
+{
+    "name": "phenogram/gateway-bindings",
+    "description": "Strictly typed PHP bindings for the Telegram Gateway API",
+    "version": "1.0.0",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Phenogram\\GatewayBindings\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Phenogram\\GatewayBindings\\Tests\\": "tests"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nikolai Shangin",
+            "email": "shanginn@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.4"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^7",
+        "phpunit/phpunit": "^11",
+        "vlucas/phpdotenv": "^5.5",
+        "fakerphp/faker": "^1.24"
+    },
+    "scripts": {
+        "fix": [
+            "PHP_CS_FIXER_IGNORE_ENV=1 ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix -vvv --config=.php-cs-fixer.php --allow-risky=yes"
+        ],
+        "phpstan": [
+            "php -d xdebug.mode=off ./tools/phpstan/vendor/bin/phpstan analyse --memory-limit=2G -c phpstan.neon"
+        ],
+        "test": [
+            "./vendor/bin/phpunit"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}

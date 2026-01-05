@@ -17,13 +17,12 @@ namespace Phenogram\GatewayBindings\Types;
  */
 class Response implements Interfaces\ResponseInterface
 {
-	public function __construct(
-		public bool $ok,
-		/** associative JSON decoded value of the result field */
-		public mixed $result = null,
-		public ?int $errorCode = null,
-		public ?string $description = null,
-		public ?Interfaces\ResponseParametersInterface $parameters = null,
-	) {
-	}
+    public function __construct(
+        public bool $ok,
+        /** associative JSON decoded value of the result field */
+        public mixed $result = null,
+        public ?int $errorCode = null,
+        public ?string $description = null,
+        public ?Interfaces\ResponseParametersInterface $parameters = null,
+    ) {}
 }

@@ -6,53 +6,53 @@ use Phenogram\GatewayBindings\Types\Interfaces\RequestStatusInterface;
 
 interface ApiInterface
 {
-	/**
-	 * Use this method to send a verification message. Charges will apply according to the pricing plan for each successful message delivery. Note that this method is always free of charge when used to send codes to your own phone number. On success, returns a RequestStatus object.
-	 * @param string $phoneNumber The phone number to which you want to send a verification message, in the E.164 format.
-	 * @param string|null $requestId The unique identifier of a previous request from checkSendAbility. If provided, this request will be free of charge.
-	 * @param string|null $senderUsername Username of the Telegram channel from which the code will be sent. The specified channel, if any, must be verified and owned by the same account who owns the Gateway API token.
-	 * @param string|null $code The verification code. Use this parameter if you want to set the verification code yourself. Only fully numeric strings between 4 and 8 characters in length are supported. If this parameter is set, code_length is ignored.
-	 * @param int|null $codeLength The length of the verification code if Telegram needs to generate it for you. Supported values are from 4 to 8. This is only relevant if you are not using the code parameter to set your own code. Use the checkVerificationStatus method with the code parameter to verify the code entered by the user.
-	 * @param string|null $callbackUrl An HTTPS URL where you want to receive delivery reports related to the sent message, 0-256 bytes.
-	 * @param string|null $payload Custom payload, 0-128 bytes. This will not be displayed to the user, use it for your internal processes.
-	 * @param int|null $ttl Time-to-live (in seconds) before the message expires. If the message is not delivered or read within this time, the request fee will be refunded. Supported values are from 30 to 3600.
-	 * @return RequestStatusInterface
-	 */
-	public function sendVerificationMessage(
-		string $phoneNumber,
-		?string $requestId = null,
-		?string $senderUsername = null,
-		?string $code = null,
-		?int $codeLength = null,
-		?string $callbackUrl = null,
-		?string $payload = null,
-		?int $ttl = null,
-	): RequestStatusInterface;
+    /**
+     * Use this method to send a verification message. Charges will apply according to the pricing plan for each successful message delivery. Note that this method is always free of charge when used to send codes to your own phone number. On success, returns a RequestStatus object.
+     * @param string $phoneNumber The phone number to which you want to send a verification message, in the E.164 format.
+     * @param string|null $requestId The unique identifier of a previous request from checkSendAbility. If provided, this request will be free of charge.
+     * @param string|null $senderUsername Username of the Telegram channel from which the code will be sent. The specified channel, if any, must be verified and owned by the same account who owns the Gateway API token.
+     * @param string|null $code The verification code. Use this parameter if you want to set the verification code yourself. Only fully numeric strings between 4 and 8 characters in length are supported. If this parameter is set, code_length is ignored.
+     * @param int|null $codeLength The length of the verification code if Telegram needs to generate it for you. Supported values are from 4 to 8. This is only relevant if you are not using the code parameter to set your own code. Use the checkVerificationStatus method with the code parameter to verify the code entered by the user.
+     * @param string|null $callbackUrl An HTTPS URL where you want to receive delivery reports related to the sent message, 0-256 bytes.
+     * @param string|null $payload Custom payload, 0-128 bytes. This will not be displayed to the user, use it for your internal processes.
+     * @param int|null $ttl Time-to-live (in seconds) before the message expires. If the message is not delivered or read within this time, the request fee will be refunded. Supported values are from 30 to 3600.
+     * @return RequestStatusInterface
+     */
+    public function sendVerificationMessage(
+        string $phoneNumber,
+        ?string $requestId = null,
+        ?string $senderUsername = null,
+        ?string $code = null,
+        ?int $codeLength = null,
+        ?string $callbackUrl = null,
+        ?string $payload = null,
+        ?int $ttl = null,
+    ): RequestStatusInterface;
 
 
-	/**
-	 * Use this method to optionally check the ability to send a verification message to the specified phone number. If the ability to send is confirmed, a fee will apply according to the pricing plan. After checking, you can send a verification message using the sendVerificationMessage method, providing the request_id from this response.
-	 * Within the scope of a request_id, only one fee can be charged. Calling sendVerificationMessage once with the returned request_id will be free of charge, while repeated calls will result in an error. Conversely, calls that don't include a request_id will spawn new requests and incur the respective fees accordingly. Note that this method is always free of charge when used to send codes to your own phone number.
-	 * In case the message can be sent, returns a RequestStatus object. Otherwise, an appropriate error will be returned.
-	 * @param string $phoneNumber The phone number for which you want to check our ability to send a verification message, in the E.164 format.
-	 * @return RequestStatusInterface
-	 */
-	public function checkSendAbility(string $phoneNumber): RequestStatusInterface;
+    /**
+     * Use this method to optionally check the ability to send a verification message to the specified phone number. If the ability to send is confirmed, a fee will apply according to the pricing plan. After checking, you can send a verification message using the sendVerificationMessage method, providing the request_id from this response.
+     * Within the scope of a request_id, only one fee can be charged. Calling sendVerificationMessage once with the returned request_id will be free of charge, while repeated calls will result in an error. Conversely, calls that don't include a request_id will spawn new requests and incur the respective fees accordingly. Note that this method is always free of charge when used to send codes to your own phone number.
+     * In case the message can be sent, returns a RequestStatus object. Otherwise, an appropriate error will be returned.
+     * @param string $phoneNumber The phone number for which you want to check our ability to send a verification message, in the E.164 format.
+     * @return RequestStatusInterface
+     */
+    public function checkSendAbility(string $phoneNumber): RequestStatusInterface;
 
 
-	/**
-	 * Use this method to check the status of a verification message that was sent previously. If the code was generated by Telegram for you, you can also verify the correctness of the code entered by the user using this method. Even if you set the code yourself, it is recommended to call this method after the user has successfully entered the code, passing the correct code in the code parameter, so that we can track the conversion rate of your verifications. On success, returns a RequestStatus object.
-	 * @param string $requestId The unique identifier of the verification request whose status you want to check.
-	 * @param string|null $code The code entered by the user. If provided, the method checks if the code is valid for the relevant request.
-	 * @return RequestStatusInterface
-	 */
-	public function checkVerificationStatus(string $requestId, ?string $code = null): RequestStatusInterface;
+    /**
+     * Use this method to check the status of a verification message that was sent previously. If the code was generated by Telegram for you, you can also verify the correctness of the code entered by the user using this method. Even if you set the code yourself, it is recommended to call this method after the user has successfully entered the code, passing the correct code in the code parameter, so that we can track the conversion rate of your verifications. On success, returns a RequestStatus object.
+     * @param string $requestId The unique identifier of the verification request whose status you want to check.
+     * @param string|null $code The code entered by the user. If provided, the method checks if the code is valid for the relevant request.
+     * @return RequestStatusInterface
+     */
+    public function checkVerificationStatus(string $requestId, ?string $code = null): RequestStatusInterface;
 
 
-	/**
-	 * Use this method to revoke a verification message that was sent previously. Returns True if the revocation request was received. However, this does not guarantee that the message will be deleted. For example, if the message has already been delivered or read, it will not be removed.
-	 * @param string $requestId The unique identifier of the request whose verification message you want to revoke.
-	 * @return bool
-	 */
-	public function revokeVerificationMessage(string $requestId): bool;
+    /**
+     * Use this method to revoke a verification message that was sent previously. Returns True if the revocation request was received. However, this does not guarantee that the message will be deleted. For example, if the message has already been delivered or read, it will not be removed.
+     * @param string $requestId The unique identifier of the request whose verification message you want to revoke.
+     * @return bool
+     */
+    public function revokeVerificationMessage(string $requestId): bool;
 }

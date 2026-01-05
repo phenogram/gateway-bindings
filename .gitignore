@@ -1,0 +1,7 @@
+/vendor
+/tools/**/vendor
+.phpunit.cache
+.php-cs-fixer.cache
+.env
+composer.lock
+/tools/**/composer.lock

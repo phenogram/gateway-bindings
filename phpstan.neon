@@ -1,0 +1,7 @@
+parameters:
+    level: 9
+    paths:
+        - src
+    excludePaths:
+        - src/Serializer.php
+        - src/SerializerInterface.php

@@ -17,9 +17,9 @@ namespace Phenogram\GatewayBindings\Types\Interfaces;
  */
 interface ResponseInterface extends TypeInterface
 {
-	public bool $ok { set; get; }
-	public mixed $result { set; get; }
-	public ?int $errorCode { set; get; }
-	public ?string $description { set; get; }
-	public ?ResponseParametersInterface $parameters { set; get; }
+    public bool $ok { set; get; }
+    public mixed $result { set; get; }
+    public ?int $errorCode { set; get; }
+    public ?string $description { set; get; }
+    public ?ResponseParametersInterface $parameters { set; get; }
 }

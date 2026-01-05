@@ -2,6 +2,4 @@
 
 namespace Phenogram\GatewayBindings\Types\Interfaces;
 
-interface TypeInterface
-{
-}
+interface TypeInterface {}
