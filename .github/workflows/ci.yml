@@ -18,27 +18,28 @@ jobs:
         php-versions: ['8.4']
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php-versions }}
-        coverage: none
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
 
-    - name: Install Main Dependencies
-      run: composer install --prefer-dist --no-progress
+      - name: Install Main Dependencies
+        run: composer install --prefer-dist --no-progress
 
-    - name: Install Tool Dependencies
-      run: |
-        composer install -d tools/phpstan --prefer-dist --no-progress
-        composer install -d tools/php-cs-fixer --prefer-dist --no-progress
+      - name: Install Tool Dependencies
+        run: |
+          composer install -d tools/phpstan --prefer-dist --no-progress
+          composer install -d tools/php-cs-fixer --prefer-dist --no-progress
 
-    - name: Check Code Style
-      run: PHP_CS_FIXER_IGNORE_ENV=1 ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.php
+      - name: Check Code Style
+        # Added --allow-risky=yes and removed the deprecated ENV variable
+        run: ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff --allow-risky=yes --config=.php-cs-fixer.php
 
-    - name: Run PHPStan
-      run: composer phpstan
+      - name: Run PHPStan
+        run: composer phpstan
 
-    - name: Run PHPUnit
-      run: composer test
+      - name: Run PHPUnit
+        run: composer test

@@ -6,6 +6,7 @@ $finder = (new PhpCsFixer\Finder())
 ;
 
 return (new PhpCsFixer\Config())
+    ->setRiskyAllowed(true)
     ->setRules([
         '@PER-CS' => true,
         '@PHP8x4Migration' => true,
