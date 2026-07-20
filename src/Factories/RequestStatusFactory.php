@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Phenogram\GatewayBindings\Factories;
 
-use Phenogram\GatewayBindings\Factories\DeliveryStatusFactory as DeliveryStatus;
-use Phenogram\GatewayBindings\Factories\VerificationStatusFactory as VerificationStatus;
 use Phenogram\GatewayBindings\Types\Interfaces\DeliveryStatusInterface;
 use Phenogram\GatewayBindings\Types\Interfaces\RequestStatusInterface;
 use Phenogram\GatewayBindings\Types\Interfaces\VerificationStatusInterface;
-use Phenogram\GatewayBindings\Types\RequestStatus;
 
 class RequestStatusFactory extends AbstractFactory
 {
@@ -34,9 +33,9 @@ class RequestStatusFactory extends AbstractFactory
         ?string $payload = null,
     ): RequestStatusInterface {
         return self::factory()->makeRequestStatus(
-            requestId: $requestId ?? self::fake()->bothify('?#?#?#?#?#?#?#???'),
-            phoneNumber: $phoneNumber ?? self::fake()->phoneNumber(),
-            requestCost: $requestCost ?? self::fake()->randomFloat(),
+            requestId: $requestId ?? bin2hex(random_bytes(8)),
+            phoneNumber: $phoneNumber ?? '+10000000000',
+            requestCost: $requestCost ?? 0.0,
             isRefunded: $isRefunded,
             remainingBalance: $remainingBalance,
             deliveryStatus: $deliveryStatus,

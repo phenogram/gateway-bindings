@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Phenogram\GatewayBindings\Factories;
 
-use Phenogram\GatewayBindings\Types\DeliveryStatus;
 use Phenogram\GatewayBindings\Types\Interfaces\DeliveryStatusInterface;
 
 class DeliveryStatusFactory extends AbstractFactory
@@ -16,8 +17,8 @@ class DeliveryStatusFactory extends AbstractFactory
     public static function make(?string $status = null, ?int $updatedAt = null): DeliveryStatusInterface
     {
         return self::factory()->makeDeliveryStatus(
-            status: $status ?? self::fake()->word(),
-            updatedAt: $updatedAt ?? self::fake()->randomNumber(),
+            status: $status ?? 'sent',
+            updatedAt: $updatedAt ?? time(),
         );
     }
 }

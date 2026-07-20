@@ -4,18 +4,25 @@ declare(strict_types=1);
 
 namespace Phenogram\GatewayBindings;
 
-use Phenogram\GatewayBindings\Types\Response;
+use Phenogram\GatewayBindings\Types\Interfaces\GatewayResponseInterface;
+use Phenogram\GatewayBindings\Types\Interfaces\ResponseInterface;
 
 class ResponseException extends \RuntimeException
 {
-    public function __construct(public Response $response)
+    public readonly ?string $gatewayError;
+
+    public function __construct(public ResponseInterface $response)
     {
+        $this->gatewayError = $response instanceof GatewayResponseInterface
+            ? $response->error
+            : $response->description;
+
         parent::__construct(
             sprintf(
-                'Response from Telegram gateway API is not ok: %s',
-                $response->description ?? 'Unknown error',
+                'Telegram Gateway API request failed: %s',
+                $this->gatewayError ?? 'Unknown error',
             ),
-            $response->errorCode ?? 0
+            $response->errorCode ?? 0,
         );
     }
 }

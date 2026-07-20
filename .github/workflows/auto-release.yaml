@@ -1,38 +1,69 @@
-name: Auto Release on Version Change
+name: Release
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - "*.*.*"
+
+permissions:
+  contents: read
 
 jobs:
-  release:
+  quality:
+    name: PHP ${{ matrix.php }} release checks
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php:
+          - "8.4"
+          - "8.5"
+
+    steps:
+      - name: Check out the tagged revision
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: |
+          composer install --no-interaction --prefer-dist --no-progress
+          composer tools:install
+
+      - name: Run quality checks
+        run: composer check
+
+      - name: Audit dependencies
+        run: |
+          composer audit --no-interaction
+          composer audit --working-dir=tools/phpstan --no-interaction
+          composer audit --working-dir=tools/php-cs-fixer --no-interaction
+
+  release:
+    name: Publish GitHub release
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Get Version from composer.json
-        id: get_version
-        run: echo "::set-output name=version::$(jq -r '.version' composer.json)"
-        shell: bash
-
-      - name: Check if tag exists
-        id: check_tag
+      - name: Validate the release tag
         run: |
-          EXISTS=$(git ls-remote --tags origin refs/tags/${{ steps.get_version.outputs.version }} | wc -l)
-          echo "::set-output name=exists::$EXISTS"
-        shell: bash
+          if [[ ! "$GITHUB_REF_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid semantic version tag: $GITHUB_REF_NAME" >&2
+            exit 1
+          fi
 
-      - name: Create Release if tag doesn't exist
-        if: steps.check_tag.outputs.exists == '0'
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          release_name: Release ${{ steps.get_version.outputs.version }}
-          draft: false
-          prerelease: false
+      - name: Create release notes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --generate-notes --title "$GITHUB_REF_NAME"

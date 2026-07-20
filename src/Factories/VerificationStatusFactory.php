@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Phenogram\GatewayBindings\Factories;
 
 use Phenogram\GatewayBindings\Types\Interfaces\VerificationStatusInterface;
-use Phenogram\GatewayBindings\Types\VerificationStatus;
 
 class VerificationStatusFactory extends AbstractFactory
 {
@@ -20,8 +21,8 @@ class VerificationStatusFactory extends AbstractFactory
         ?string $codeEntered = null,
     ): VerificationStatusInterface {
         return self::factory()->makeVerificationStatus(
-            status: $status ?? self::fake()->word(),
-            updatedAt: $updatedAt ?? self::fake()->randomNumber(),
+            status: $status ?? 'code_valid',
+            updatedAt: $updatedAt ?? time(),
             codeEntered: $codeEntered,
         );
     }

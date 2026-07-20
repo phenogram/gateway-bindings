@@ -1,7 +1,6 @@
 parameters:
-    level: 9
+    level: max
     paths:
+        - examples
         - src
-    excludePaths:
-        - src/Serializer.php
-        - src/SerializerInterface.php
+        - tests

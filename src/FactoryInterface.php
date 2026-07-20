@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Phenogram\GatewayBindings;
 
 use Phenogram\GatewayBindings\Types\Interfaces\DeliveryStatusInterface;

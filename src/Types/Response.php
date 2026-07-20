@@ -1,28 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Phenogram\GatewayBindings\Types;
 
 /**
- * The response contains a JSON object, which always has a Boolean field 'ok' and may
- * have an optional String field 'description' with a human-readable description
- * of the result.
+ * The response envelope from the Telegram Gateway API.
  *
- * If 'ok' equals True, the request was successful and the result of the query
- * can be found in the 'result' field. In case of an unsuccessful request,
- * 'ok' equals false and the error is explained in the 'description'.
- *
- * An Integer 'error_code' field is also returned, but its contents are subject to change in the future.
- * Some errors may also have an optional field 'parameters' of the type ResponseParameters,
- * which can help to automatically handle the error.
+ * The last four constructor arguments keep source compatibility with version
+ * 1.0. New code must use the `error` argument for a Gateway API error.
  */
-class Response implements Interfaces\ResponseInterface
+class Response implements Interfaces\GatewayResponseInterface
 {
+    public ?string $error;
+
+    /**
+     * @param int|null                                   $errorCode   Deprecated. The Gateway API has no error_code field.
+     * @param string|null                                $description Deprecated. The Gateway API uses the error field.
+     * @param Interfaces\ResponseParametersInterface|null $parameters Deprecated. The Gateway API has no parameters field.
+     */
     public function __construct(
         public bool $ok,
-        /** associative JSON decoded value of the result field */
         public mixed $result = null,
         public ?int $errorCode = null,
         public ?string $description = null,
         public ?Interfaces\ResponseParametersInterface $parameters = null,
-    ) {}
+        ?string $error = null,
+    ) {
+        $this->error = $error ?? $description;
+    }
 }

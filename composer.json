@@ -1,9 +1,19 @@
 {
     "name": "phenogram/gateway-bindings",
     "description": "Strictly typed PHP bindings for the Telegram Gateway API",
-    "version": "1.0.0",
     "type": "library",
     "license": "MIT",
+    "keywords": [
+        "gateway",
+        "otp",
+        "telegram",
+        "verification"
+    ],
+    "homepage": "https://github.com/phenogram/gateway-bindings",
+    "support": {
+        "issues": "https://github.com/phenogram/gateway-bindings/issues",
+        "source": "https://github.com/phenogram/gateway-bindings"
+    },
     "autoload": {
         "psr-4": {
             "Phenogram\\GatewayBindings\\": "src/"
@@ -11,6 +21,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Phenogram\\GatewayBindings\\Examples\\": "examples/",
             "Phenogram\\GatewayBindings\\Tests\\": "tests"
         }
     },
@@ -24,25 +35,46 @@
         "php": "^8.4"
     },
     "require-dev": {
-        "symfony/var-dumper": "^7",
-        "phpunit/phpunit": "^11",
-        "vlucas/phpdotenv": "^5.5",
-        "fakerphp/faker": "^1.24"
+        "phpunit/phpunit": "^11.5.50"
     },
     "scripts": {
+        "check": [
+            "composer validate --strict",
+            "@lint:tools",
+            "@test",
+            "@examples",
+            "@phpstan",
+            "@style"
+        ],
+        "examples": [
+            "php examples/offline.php",
+            "php examples/send-verification.php"
+        ],
         "fix": [
-            "PHP_CS_FIXER_IGNORE_ENV=1 ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix -vvv --config=.php-cs-fixer.php --allow-risky=yes"
+            "./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes --sequential"
+        ],
+        "lint:tools": [
+            "@composer --working-dir=tools/phpstan validate --strict",
+            "@composer --working-dir=tools/php-cs-fixer validate --strict"
         ],
         "phpstan": [
-            "php -d xdebug.mode=off ./tools/phpstan/vendor/bin/phpstan analyse --memory-limit=2G -c phpstan.neon"
+            "php -d xdebug.mode=off ./tools/phpstan/vendor/bin/phpstan analyse --memory-limit=2G --configuration=phpstan.neon --debug --no-progress"
+        ],
+        "style": [
+            "./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.php --allow-risky=yes --sequential"
         ],
         "test": [
             "./vendor/bin/phpunit"
+        ],
+        "tools:install": [
+            "@composer install --working-dir=tools/phpstan --no-interaction --prefer-dist --no-progress",
+            "@composer install --working-dir=tools/php-cs-fixer --no-interaction --prefer-dist --no-progress"
         ]
     },
     "config": {
         "allow-plugins": {
             "php-http/discovery": true
-        }
+        },
+        "sort-packages": true
     }
 }
