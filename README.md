@@ -1,42 +1,44 @@
-**English** · [Русский](README.ru.md)
+[English](README.en.md) · **Русский**
 
 # Phenogram Gateway Bindings
 
 [![CI](https://github.com/phenogram/gateway-bindings/actions/workflows/ci.yml/badge.svg)](https://github.com/phenogram/gateway-bindings/actions/workflows/ci.yml)
-[![Latest Stable Version](https://poser.pugx.org/phenogram/gateway-bindings/v/stable)](https://packagist.org/packages/phenogram/gateway-bindings)
-[![PHP Version](https://poser.pugx.org/phenogram/gateway-bindings/require/php)](https://packagist.org/packages/phenogram/gateway-bindings)
-[![License](https://poser.pugx.org/phenogram/gateway-bindings/license)](LICENSE)
+[![Последняя стабильная версия](https://poser.pugx.org/phenogram/gateway-bindings/v/stable)](https://packagist.org/packages/phenogram/gateway-bindings)
+[![Версия PHP](https://poser.pugx.org/phenogram/gateway-bindings/require/php)](https://packagist.org/packages/phenogram/gateway-bindings)
+[![Лицензия](https://poser.pugx.org/phenogram/gateway-bindings/license)](LICENSE)
 
-Strict PHP bindings for the [Telegram Gateway API](https://core.telegram.org/gateway/api).
+Строго типизированные PHP-биндинги для
+[Telegram Gateway API](https://core.telegram.org/gateway/api).
 
-Use this package to send verification codes through Telegram. It gives you:
+Пакет помогает отправлять коды подтверждения через Telegram. В нём есть:
 
-- Typed methods for all Gateway API operations.
-- Typed request, delivery, and verification status objects.
-- A small serializer for Gateway API field names.
-- An HTTP client interface. You can use your preferred HTTP library.
-- Offline tests for all repository examples.
+- типизированные методы для всех операций Gateway API;
+- типизированные объекты запроса, доставки и проверки кода;
+- небольшой сериализатор имён полей Gateway API;
+- интерфейс HTTP-клиента без привязки к конкретной библиотеке;
+- офлайн-тесты для всех примеров в репозитории.
 
-This package does not select an HTTP library for your application. Implement
-`ClientInterface`, or adapt the tested [cURL example](examples/CurlClient.php).
+Пакет не выбирает HTTP-библиотеку за ваше приложение. Реализуйте
+`ClientInterface` или адаптируйте проверенный
+[пример на cURL](examples/CurlClient.php).
 
-## Requirements
+## Требования
 
-- PHP 8.4 or later.
+- PHP 8.4 или новее.
 - Composer 2.
-- An access token for live Gateway API requests.
-- The cURL PHP extension only if you use the cURL example.
+- Токен доступа для реальных запросов к Gateway API.
+- Расширение PHP cURL, только если вы используете пример с cURL.
 
-## Install
+## Установка
 
 ```bash
 composer require phenogram/gateway-bindings
 ```
 
-## Run the repository examples
+## Запуск примеров из репозитория
 
-The example commands below require a source checkout.
-Prepare the checkout before you run them:
+Для команд с примерами ниже нужен клон репозитория.
+Подготовьте клон перед запуском:
 
 ```bash
 git clone https://github.com/phenogram/gateway-bindings.git
@@ -44,41 +46,40 @@ cd gateway-bindings
 composer install
 ```
 
-## Start offline
+## Первый запуск без сети
 
-Run the complete example. It uses an injected local response. It does not use a
-token, a network connection, or a paid API operation.
+Запустите полный пример. Он использует локальный ответ. Для него не нужны токен,
+сеть и платная операция API.
 
 ```bash
 php examples/offline.php
 ```
 
-Expected output:
+Ожидаемый результат:
 
 ```text
 Request request-demo: code_valid
 ```
 
-You can also simulate a send operation:
+Также можно имитировать отправку сообщения:
 
 ```bash
 php examples/send-verification.php
 ```
 
-Expected output:
+Ожидаемый результат:
 
 ```text
 Simulated request request-demo for +12025550123
 ```
 
-## Send a live verification message
+## Отправка реального сообщения
 
 > [!WARNING]
-> A live request can charge your Telegram Gateway account. Read
-> [Billing rules](#billing-rules) before you run this command.
+> Реальный запрос может списать средства со счёта Telegram Gateway. До запуска
+> прочитайте раздел [Правила тарификации](#правила-тарификации).
 
-Set the token and the destination phone number. Use the E.164 phone number
-format.
+Задайте токен и номер получателя. Используйте формат E.164.
 
 ```bash
 export TELEGRAM_GATEWAY_TOKEN='your-token'
@@ -86,44 +87,45 @@ export TELEGRAM_GATEWAY_PHONE='+12025550123'
 php examples/send-verification.php --live
 ```
 
-The live example calls `sendVerificationMessage` directly. Copy
-[`examples/CurlClient.php`](examples/CurlClient.php) into your application if
-you want to use it there. Change its namespace to match your application.
+Пример вызывает `sendVerificationMessage` напрямую. Если вы хотите применить
+этот клиент в приложении, скопируйте
+[`examples/CurlClient.php`](examples/CurlClient.php) и замените пространство
+имён.
 
-## Billing rules
+## Правила тарификации
 
-`checkSendAbility` is optional. It is not a free dry run.
+`checkSendAbility` — необязательный метод. Это не бесплатная пробная проверка.
 
-- If Telegram confirms that it can send to the phone number, the check can
-  charge your account.
-- The successful check returns a `request_id`.
-- One later call to `sendVerificationMessage` with that `request_id` is free.
-- A repeated send with the same `request_id` returns an error.
-- A send without that `request_id` creates a new request and can add a charge.
-- Tests to your own phone number are free according to the Telegram Gateway
-  documentation.
+- Если Telegram подтвердит возможность отправки на номер, проверка может списать
+  средства.
+- Успешная проверка возвращает `request_id`.
+- Один последующий вызов `sendVerificationMessage` с этим `request_id`
+  выполняется без повторного списания.
+- Повторная отправка с тем же `request_id` завершится ошибкой.
+- Отправка без этого `request_id` создаст новый запрос и может привести к новому
+  списанию.
+- По документации Telegram тестовые запросы на собственный номер бесплатны.
 
-A direct `sendVerificationMessage` request follows the Gateway pricing plan.
-Telegram refunds the fee when the message does not meet the delivery conditions
-within the specified `ttl`. See the
-[official Gateway API reference](https://core.telegram.org/gateway/api) for the
-current billing rules.
+Прямой вызов `sendVerificationMessage` тарифицируется по плану Gateway.
+Telegram возвращает средства, если сообщение не выполнило условия доставки в
+пределах заданного `ttl`. Актуальные правила приведены в
+[официальной документации Gateway API](https://core.telegram.org/gateway/api).
 
-## Public API
+## Публичный API
 
-| Method | Purpose | Result |
+| Метод | Назначение | Результат |
 | --- | --- | --- |
-| `sendVerificationMessage(...)` | Send a verification code. | `RequestStatusInterface` |
-| `checkSendAbility($phoneNumber)` | Check if Telegram can send to a number. This call can charge the account. | `RequestStatusInterface` |
-| `checkVerificationStatus($requestId, $code)` | Read request status and optionally verify a code. | `RequestStatusInterface` |
-| `revokeVerificationMessage($requestId)` | Ask Telegram to revoke a message. | `bool` |
+| `sendVerificationMessage(...)` | Отправляет код подтверждения. | `RequestStatusInterface` |
+| `checkSendAbility($phoneNumber)` | Проверяет возможность отправки на номер. Этот вызов может списать средства. | `RequestStatusInterface` |
+| `checkVerificationStatus($requestId, $code)` | Получает статус запроса и при необходимости проверяет код. | `RequestStatusInterface` |
+| `revokeVerificationMessage($requestId)` | Просит Telegram отозвать сообщение. | `bool` |
 
-See the [English API guide](docs/en/api.md) for all parameters and status
-values.
+Все параметры и значения статусов описаны в
+[русском руководстве по API](docs/ru/api.md).
 
-## HTTP client contract
+## Контракт HTTP-клиента
 
-The `Api` class sends a method name and a serialized data array to your client:
+Класс `Api` передаёт имя метода и сериализованный массив данных вашему клиенту:
 
 ```php
 interface ClientInterface
@@ -133,23 +135,24 @@ interface ClientInterface
 }
 ```
 
-Return a `Response` with the exact Gateway API envelope:
+Верните `Response` с точной структурой ответа Gateway API:
 
-- Success: `ok: true` and `result`.
-- Failure: `ok: false` and `error`.
+- успех: `ok: true` и `result`;
+- ошибка: `ok: false` и `error`.
 
-The Gateway API does not return the Bot API fields `description`, `error_code`,
-or `parameters`. The version 1.0 interface and constructor fields remain for
-source compatibility. New response implementations must use
-`GatewayResponseInterface` and its `error` field.
+Gateway API не возвращает поля Bot API `description`, `error_code` и
+`parameters`. Интерфейс и поля конструктора из версии 1.0 сохранены для
+совместимости исходного кода. В новых реализациях ответа используйте
+`GatewayResponseInterface` и его поле `error`.
 
-Read the [English client guide](docs/en/client.md) for transport rules and error
-handling.
+Правила транспорта и обработки ошибок описаны в
+[русском руководстве по клиенту](docs/ru/client.md).
 
-## Errors
+## Ошибки
 
-`Api` throws `ResponseException` when Telegram returns `ok: false`. The
-exception accepts any `ResponseInterface` implementation.
+Если Telegram вернул `ok: false`, класс `Api` выбрасывает
+`ResponseException`. Исключение принимает любую реализацию
+`ResponseInterface`.
 
 ```php
 try {
@@ -159,79 +162,79 @@ try {
 }
 ```
 
-A malformed successful response causes `UnexpectedValueException`. A transport
-can use `RuntimeException` for network, HTTP, or JSON failures.
+Некорректный успешный ответ вызывает `UnexpectedValueException`. Транспорт
+может использовать `RuntimeException` для ошибок сети, HTTP и JSON.
 
-## Typed results
+## Типизированные результаты
 
-`RequestStatusInterface` contains:
+`RequestStatusInterface` содержит:
 
-- `requestId`
-- `phoneNumber`
-- `requestCost`
-- `isRefunded`
-- `remainingBalance`
-- `deliveryStatus`
-- `verificationStatus`
-- `payload`
+- `requestId`;
+- `phoneNumber`;
+- `requestCost`;
+- `isRefunded`;
+- `remainingBalance`;
+- `deliveryStatus`;
+- `verificationStatus`;
+- `payload`.
 
-Optional fields are `null` when Telegram omits them. The serializer rejects a
-missing required field or an invalid field type.
+Если Telegram не вернул необязательное поле, его значение равно `null`.
+Сериализатор отклоняет ответ без обязательного поля или с неверным типом.
 
-## Documentation and examples
+## Документация и примеры
 
-| Resource | English | Russian |
+| Материал | English | Русский |
 | --- | --- | --- |
-| API and billing | [docs/en/api.md](docs/en/api.md) | [docs/ru/api.md](docs/ru/api.md) |
-| HTTP clients and errors | [docs/en/client.md](docs/en/client.md) | [docs/ru/client.md](docs/ru/client.md) |
+| API и тарификация | [docs/en/api.md](docs/en/api.md) | [docs/ru/api.md](docs/ru/api.md) |
+| HTTP-клиенты и ошибки | [docs/en/client.md](docs/en/client.md) | [docs/ru/client.md](docs/ru/client.md) |
 
-Runnable examples:
+Исполняемые примеры:
 
-- [`examples/offline.php`](examples/offline.php) verifies a code with a local response.
-- [`examples/send-verification.php`](examples/send-verification.php) simulates a send by default. The `--live` option sends a real request.
-- [`examples/CurlClient.php`](examples/CurlClient.php) is an injectable cURL client.
+- [`examples/offline.php`](examples/offline.php) проверяет код с локальным ответом.
+- [`examples/send-verification.php`](examples/send-verification.php) по умолчанию имитирует отправку. Флаг `--live` выполняет реальный запрос.
+- [`examples/CurlClient.php`](examples/CurlClient.php) содержит HTTP-клиент с внедряемым транспортом.
 
-Run all examples without network access:
+Запустите все примеры без доступа к сети:
 
 ```bash
 composer examples
 ```
 
-## Development
+## Разработка
 
-Install the main dependencies and the isolated quality tools:
+Установите основные зависимости и изолированные инструменты контроля качества:
 
 ```bash
 composer install
 composer tools:install
 ```
 
-Run the complete local gate:
+Запустите все локальные проверки:
 
 ```bash
 composer check
 ```
 
-The gate validates Composer metadata, runs PHPUnit, runs every example offline,
-runs PHPStan at the maximum level, and checks the code style.
+Команда проверяет метаданные Composer, запускает PHPUnit и все примеры без сети,
+выполняет PHPStan на максимальном уровне и проверяет стиль кода.
 
-## Security
+## Безопасность
 
-- Store the access token outside source control.
-- Do not write tokens, phone numbers, or verification codes to logs.
-- Use HTTPS for each live request.
-- Verify the signature and timestamp of each delivery report. Follow the
-  [official integrity procedure](https://core.telegram.org/gateway/api#checking-report-integrity).
+- Храните токен вне системы контроля версий.
+- Не записывайте токены, номера телефонов и коды подтверждения в журналы.
+- Используйте HTTPS для всех реальных запросов.
+- Проверяйте подпись и время каждого отчёта о доставке. Следуйте
+  [официальной процедуре](https://core.telegram.org/gateway/api#checking-report-integrity).
 
-Report a suspected vulnerability through a private maintainer channel. Do not
-put credentials or personal data in a public issue. Read the
-[security policy](SECURITY.md).
+Сообщайте об уязвимости через закрытый канал связи с сопровождающим. Не
+публикуйте учётные данные и персональные данные в открытой задаче. Подробности
+приведены в [политике безопасности](SECURITY.md).
 
-## Contributing
+## Участие в разработке
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md). Keep tests offline. Update English and
-Russian documents in the same change.
+Прочитайте [CONTRIBUTING.md](CONTRIBUTING.md). Не используйте сеть в тестах.
+Обновляйте английскую и русскую документацию в одном изменении.
 
-## License
+## Лицензия
 
 [MIT](LICENSE)

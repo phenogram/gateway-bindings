@@ -1,4 +1,4 @@
-[Documentation](../../README.md) · [Русская версия](../ru/client.md)
+[Documentation](../../README.en.md) · [Русская версия](../ru/client.md)
 
 # HTTP client and error guide
 

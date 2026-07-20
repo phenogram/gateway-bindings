@@ -12,7 +12,6 @@ final class DocumentationTest extends TestCase
         'CONTRIBUTING.md',
         'README.md',
         'README.en.md',
-        'README.ru.md',
         'SECURITY.md',
         'docs/en/api.md',
         'docs/en/client.md',
@@ -62,11 +61,11 @@ final class DocumentationTest extends TestCase
     {
         self::assertStringContainsString(
             '`checkSendAbility` is optional. It is not a free dry run.',
-            $this->read($this->projectRoot() . '/README.md'),
+            $this->read($this->projectRoot() . '/README.en.md'),
         );
         self::assertStringContainsString(
             '`checkSendAbility` — необязательный метод. Это не бесплатная пробная проверка.',
-            $this->read($this->projectRoot() . '/README.ru.md'),
+            $this->read($this->projectRoot() . '/README.md'),
         );
     }
 

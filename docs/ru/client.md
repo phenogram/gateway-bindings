@@ -1,4 +1,4 @@
-[Документация](../../README.ru.md) · [English version](../en/client.md)
+[Документация](../../README.md) · [English version](../en/client.md)
 
 # Руководство по HTTP-клиенту и ошибкам
 

@@ -1,4 +1,4 @@
-[Документация](../../README.ru.md) · [English version](../en/api.md)
+[Документация](../../README.md) · [English version](../en/api.md)
 
 # Руководство по Gateway API
 
