@@ -7,7 +7,9 @@ use Phenogram\GatewayBindings\Examples\CurlClient;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$live = in_array('--live', $argv, true);
+/** @var list<string> $arguments */
+$arguments = $_SERVER['argv'] ?? [];
+$live = in_array('--live', $arguments, true);
 $phoneNumber = '+12025550123';
 
 if ($live) {
